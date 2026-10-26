@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>솔우주인의 사주풀이(명리학)</title>
+    <style>
+        body {
+            margin: 0; padding: 20px; font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px; padding: 30px; width: 100%; max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 { text-align: center; font-size: 24px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        input, select, button {
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px;
+            border: none; box-sizing: border-box; font-size: 16px;
+        }
+        button {
+            background: linear-gradient(to right, #6a11cb, #2575fc); color: white;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        button:hover { opacity: 0.8; }
+        #result { margin-top: 20px; line-height: 1.6; font-size: 15px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>솔우주인의 사주풀이(명리학)</h1>
+        <input type="text" id="birthData" placeholder="예: 1979년 10월 27일 오전 10시">
+        <button onclick="getSaju()">나의 사주 풀이 시작하기</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function getSaju() {
+            const birthData = document.getElementById('birthData').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!birthData) { alert("생년월일과 시간을 입력해 주세요."); return; }
+            
+            resultDiv.innerText = "우주의 기운을 모아 명리학 풀이를 진행 중입니다...\n(약 10초 정도 소요됩니다)";
+            
+            try {
+                const response = await fetch('/api/saju', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ birthData })
+                });
+                const data = await response.json();
+                resultDiv.innerText = data.result || data.error;
+            } catch (error) {
+                resultDiv.innerText = "풀이 중 오류가 발생했습니다. 다시 시도해 주세요.";
+            }
+        }
+    </script>
+</body>
+</html>
